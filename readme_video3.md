@@ -97,7 +97,7 @@ Antfu gets on a march and explains the excitement of working through a clear lis
 
 Bug: identify cross-origin headers need to be specifically specified for the webcontainer, however this appears to be at odds with allowing devtools to work.  (Will park and come back to this).
 
-* Pinia *
+*###Pinia*
 - Antfu, starts by playing around to experiment on how the store is initiated if called in components on the web or client.
 - Considers moving the usePlayground into the store and then typing the environments.
 - My utilising the mount() function on the client side, that also provides some simplification between concerns re. server vs client.

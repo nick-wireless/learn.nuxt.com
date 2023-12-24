@@ -1,9 +1,9 @@
 <template>
-  <div
-    class="w-screen h-screen h-100dvh of-hidden"
+  <main
+    h-100dvh h-screen w-screen of-hidden
     grid="~ rows-[max-content_1fr]"
   >
     <TheNav />
     <slot />
-  </div>
+  </main>
 </template>

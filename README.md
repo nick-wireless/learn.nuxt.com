@@ -1,13 +1,5 @@
 #Episode 1 - Project Setup
 
-[0:00:00 Intro](https://www.youtube.com/live/49WXr6kVBVI?si=feG_wYtmS9d7DKub)
-- This project, very inspired by [Learn.svelte.dev](https://learn.svelte.dev).
-- Stackblitz's webcontainer is another key component.
-- Will likely have its own design style and also will add a few other objectives:
-  - Allow for reproduction of issues.
-  - Extensible (with other module systems).
-  - Could download & run as a standalone app.
-
 Moreover, the actual build process is part of the process for learning and demonstrating Nuxt, so lets see how we go.
 
 [0:06:20 Project Setup](https://www.youtube.com/watch?v=49WXr6kVBVI&t=380s)
@@ -35,8 +27,6 @@ Along the way, Antfu shows how tests the success of the installs.
     - presetIcons, allows to use icons as attributes
     - presetAttributify, allows direct writing of classes as attributes, with super powers. ***
   - Within App.vue, add the [ import '@unocss/reset/tailwind'] to reset the html elements.  (Allows your library to have greater consistency across a variety of browsers.)
-
-*** Footnote: to me it appears it is like using BODMAS (bracket) notation in maths, only instead with named attributes outside equals, such as p="y-2 x-4", or font="mono light".
 
 ### [Nuxt Color-mode](https://www.youtube.com/live/49WXr6kVBVI?si=dFctbP0EdW3_T415&t=1171)
 - Discussion: difference between nuxtjs/color-mode and vueUse, color-mode... the first is SSR compatible (as persists state via cookie that can be passed to server), helps with smarts behind hydration sent down the line.

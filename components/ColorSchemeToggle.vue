@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 const colorMode = useColorMode()
 
-const toggleMode = () => colorMode.value = colorMode.value === 'light' ? 'dark' : 'light'
+function toggleMode() {
+  colorMode.preference = colorMode.value === 'light' ? 'dark' : 'light'
+}
 </script>
 
 <template>
   <button
-    class="p-2 rounded hover:bg-active"
+    rounded p-2
+    hover="bg-active"
     @click="toggleMode"
   >
-    <div class="i-carbon-moon dark:i-carbon-sun " />
+    <div i-ph-sun-dim-duotone dark:i-ph-moon-stars-duotone text-2xl />
   </button>
 </template>

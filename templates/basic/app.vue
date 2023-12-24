@@ -1,14 +1,8 @@
 <script setup lang="ts">
-if (process.client) {
-  console.log('Client Init')
-  window.addEventListener('message', (e) => {
-    console.log('got message', e)
-  })
-}
+const msg = 'Hello World!'
 </script>
 
 <template>
-  <div>
-    Hello
-  </div>
+  <div>{{ msg.toUpperCase() }}</div>
+  <NuxtPage />
 </template>

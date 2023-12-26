@@ -29,9 +29,9 @@ PR's / recommendation or learnings from others to this repo to improve its usefu
 ***
 Footnote 1: a tip of the hat and deep thank you to Antfu.
 
-To me the ecosystem and future of Vue, Nuxt, Vite, Nitro, UnoCss etc. seems bright.  In my view, those involved appear as modern day demigods with superpowers and tremendous intuition & energy to do great things.
+To me the ecosystem and future of Vue, Nuxt, Vite, Nitro, UnoCss etc. is bright.  In my view, those involved appear as modern day demigods with superpowers and tremendous intuition & energy to do great things.
 
-Antfu personifies the new wave of leaders and energy perfectly, his art (software) is impressive and his output is testomony in my mind to the beautiful online-tools he has chosen.  Thank you Anthony, and all the leaders (Evan, Sebastian, Daniel etc) who come before to give us all momentum!
+Antfu personifies the new wave of leaders and energy perfectly, his art (software) is impressive and his output is testomony in my mind to the beautiful online-tools he has made and chosen himself.  Thank you Anthony, and thank you to all the leaders (Evan, Sebastian, Daniel etc) who came before to give us all momentum!
 
 ***
 
@@ -120,8 +120,8 @@ Commit: [[ / feat: basic layout / ]](https://github.com/nuxt/learn.nuxt.com/comm
 Reference Sites: [WebContainers.io](https://webcontainers.io/), [XTerm.JS](https://xtermjs.org/), [.getReader()](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream/getReader)
 - Antfu, follows documentation to implement a webcontainer.
 - Documentation states warning, 'call only once'... Antfu, considers and sets up: [ /composables/webContainer.ts ]
-  - Sets up guard to run only once.
-  - Another term about what are coding: 'creating a singleton' pattern.
+  - Sets up guard to run only once (NH).
+  - Another way of saying what are coding: 'a singleton' .
   - Consider the SPA vs SSR dynamics of Nuxt, consider also a good idea to use [ .client.vue ] on ThePlayground component, to ensure only run there.
 - Webcontainers needs special headers enabled... Antfu, hunts around and feels the right place is to put within the Nitro server.
   - Problem shoots to represent first instance load of container.
@@ -212,7 +212,7 @@ Footnotes & interesting asides (exploring the links provided):
 - UnoCSS Typography has a great set of [preset colors](https://unocss.dev/presets/typography#colors) that can be applied to make your fonts look professional.
 - Also, has ability to introduce 'relative sizes' of e.g. p vs h1!
 
-Commit: / feat: integrate '@nuxt/content' /
+Commit: [/ feat: integrate '@nuxt/content' /](https://github.com/nuxt/learn.nuxt.com/commit/b3b54c67f270a9e31be04bc5d53babd812ac0b2c)
 
 
 ## [0:43:42 Struggling with WebContainers](https://www.youtube.com/live/mDjI1uR-s-M?si=tdZBoCbLjp3aAhjG&t=2623)
@@ -235,7 +235,7 @@ Commit: / feat: integrate '@nuxt/content' /
                   - Writes the method to flatten the file system.
               - Next, shows how to export 'globFilesToWebContainerFs', withing composables, to call into the component at hand.
 
-Commit: / feat: support mounted nested folder to WC /
+Commit: [/ feat: support mounted nested folder to WC /](https://github.com/nuxt/learn.nuxt.com/commit/52d87006c2d98d854b9a6edbec84d6e4c1dea59c)
 
 - Back to original problem, Nuxt representing in WebContainer...
     - Errors present, test by regressing Nitro to an earlier version, in case due to latest.
@@ -246,7 +246,7 @@ Commit: / feat: support mounted nested folder to WC /
 // PARK ... will ask around and return later.
 
 Footnote, interesting asides:
-- In terminal, can access window.useNuxtApp() in the session
+- In terminal, can access `window.useNuxtApp()` in the session
 
 
 ## [1:41:00 Resizable Panels](https://www.youtube.com/live/mDjI1uR-s-M?si=RUwKWggLfJiztGfv&t=6062)
@@ -268,7 +268,7 @@ Footnote, interesting asides:
       - Rather than exporting a ref, shows how to export a function (which is now a composable).
       - This is an interesting pattern, when [applying the composable](https://www.youtube.com/live/mDjI1uR-s-M?si=bTZsAVfa9WRZtcAX&t=7427), through the refactor.
 
-Commit: / feat: support resizable panels /
+Commit: [/ feat: support resizable panels /](https://github.com/nuxt/learn.nuxt.com/commit/1e02d350ed972fdcda24d436d513239fcc4ba6bf)
 
 
 ## [2:10:00 Chat & Tools Sharing](https://www.youtube.com/live/mDjI1uR-s-M?si=44casB-Nwwk6fqam&t=7802)
@@ -282,22 +282,22 @@ Mostly talking about the tooling described in [Github, Antfu Use Page](https://g
 - Antfu uses eslint for linting and formatting and describes why [here](https://antfu.me/posts/why-not-prettier).  Essentially, allows line by line control over how things are handled (with highlevel options).
 
 ### From the audience:
-- To flip between start and end of open brackets: CMD + Shift + \
-- To jump to that line number: CMD + P, then : with line number
+- To flip between start and end of open brackets: *CMD + Shift + \\*
+- To jump to that line number: *CMD + P, then : with line number*
 
 Deeper dive topics:
 
 ### Eslint settings for wrapping of lists:
 - Eslint, customized his own prettier formatting preference re. first items::
     - Can change the arrangement 'all on one line' vs 'vertical list' of items, but setting preference on the first item.
-    - Look for rule drafting in []'consistent-list-newline'](https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/consistent-list-newline.md)
+    - Look for rule drafting in ['consistent-list-newline'](https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/consistent-list-newline.md)
 
 ### Searching existing alternate code bases, while in flow:
-- One good efficiency hack Antfu uses with the Tab functionality available in MacOS & VSCode is CNT + R (for recent) to look (or search through) previously opened projects.
-- Tip: consider CNT + R && CMD + Enter on selected project, opens in a new tab.
+- One good efficiency hack Antfu uses with the Tab functionality available in MacOS & VSCode is *CNT + R* (for recent) to look (or search through) previously opened projects.
+- Tip: consider *CNT + R && CMD + Enter* on selected project, opens in a new tab.
     - Great for setting up workspaces (learning from other projects) or
     - For opening a reference project to review before writing your own.
-- CMD + P, allows you to search for files within the project.
+- *CMD + P*, allows you to search for files within the project.
 
 ### [.zshrc](https://github.com/antfu/dotfiles/blob/main/.zshrc)
 - Highlights a long list of aliases, within zsh, for node use.
@@ -310,10 +310,12 @@ Deeper dive topics:
     - cloner - puts into reproduction folder and opens it.
     - codei vite - is a helper along the same lines, 'knowing you have a project, opens it quickly from whereever, in this case vite'.
 
-### Reviewing code hacks...
-[Piece together of the above... having loaded the target projects in the various folders]
+### Reviewing code hacks...(NH)
+Piecing together of the above... having loaded the target projects in the various folders, Antfu:
 - pr function, with the number... when inside the repo, opens the PR in the code editor.
 - then 'main' to get back out.
+
+
 
 
 # Episode 3 - Pinia & Editor & Refactors
@@ -367,15 +369,15 @@ Next, lets also want the server boot logic to be in its own composable... lets p
 - Antfu lists 6 todo items, from adding Pinia, to syncing styles.
 - Then considers order of todos, as the order can help with the following component creation.
 - Monaco Module - discussed as option for including.  Antfu, decides to roll his own as keen to manage the integrations directly.
-    - This lead to exploration of the SFC Vue Playrgound, which has type support and a Monaco editor implementation.
+    - This lead to exploration of the SFC Vue Playgound, which has type support and a Monaco editor implementation.
     - However, lets avoid implementing another runtime instance of Vue when we have the Nuxt infrastructure already. 
 - Where does this leave us? ... Well, instead of implementing Monaco (which could take weeks), lets focus on getting an editor in its simplest form working.
 
 ## [1:06:15 Virtual File Structure](https://www.youtube.com/live/B7JJP-vgImM?si=ciEFzvFG0dUn3i6f&t=3979)
 OK... so lets do the refactor of the composable and hook up basic editing in the webcontainer:
-    - Focus, on startDevServer(), placing within playground.ts.
-    - Consider if functions are flat, async or mounted within PanelPreview.client.vue.
-Commit: / refactor: moving and dividing some parts / [code here](https://github.com/nuxt/learn.nuxt.com/commit/7daf1fed3c788a6dc174127f1b732be5b0354a3b?diff=unified&w=0)
+- Focus, on [ startDevServer() ], placing within playground.ts.
+- Consider if functions are flat, async or mounted within <PanelPreview.client.vue>.
+Commit: [/ refactor: moving and dividing some parts /](https://github.com/nuxt/learn.nuxt.com/commit/7daf1fed3c788a6dc174127f1b732be5b0354a3b?diff=unified&w=0)
 
 [Next](https://www.youtube.com/live/B7JJP-vgImM?si=C7C8LSEmkIdrlt5t&t=4686)... lets consider the file we are writing to, it might be any of a number, so lets consider a virtual file system:
 - First up, imagining a class File, with all the components.
@@ -402,7 +404,7 @@ Consider props and defineProps, to pass in the file to be used in the editor.
 - Next, shows how can throttledWatch the files for changes - from VueUse.
 - Demonstrates, 'text-primary' highlighting of current file, with the simple presets of UnoCSS set up in earlier classes.
 
-Commit: / feat: introduce `File` structure and add basic editor / [code here](https://github.com/nuxt/learn.nuxt.com/commit/0d1bc13e4aef14a0967763c1d6671e17caa09298)
+Commit: [/ feat: introduce File structure and add basic editor /](https://github.com/nuxt/learn.nuxt.com/commit/0d1bc13e4aef14a0967763c1d6671e17caa09298)
 
 ## [2:15:00 Explain Vue defineProps](https://www.youtube.com/live/B7JJP-vgImM?si=VlZyM6Q6WdSkfD8e&t=8108)
 Antfu runs through the syntax of various ways of declaring Props.
@@ -416,7 +418,7 @@ Antfu gets on a march and explains the excitement of working through a clear lis
 
 Bug: identify cross-origin headers need to be specifically specified for the webcontainer, however this appears to be at odds with allowing devtools to work.  (Will park and come back to this).
 
-*###Pinia*
+###*Pinia*
 - Antfu, starts by playing around to experiment on how the store is initiated if called in components on the web or client.
 - Considers moving the usePlayground into the store and then typing the environments.
 - My utilising the mount() function on the client side, that also provides some simplification between concerns re. server vs client.
@@ -428,7 +430,7 @@ Next let's consider the individual ui elements, some make sense to simply implem
 - Discovered Nuxt's composable useCookie automatically serializes and deserialize, docs revealed [here](https://nuxt.com/docs/api/composables/use-cookie).
 - Antfu showed the 'traditional way' pre-Nuxt, then simplifies the code to rely on Nuxt's built in composables, which simplifies the approach a lot.
 
-Commit: / feat: refactor using pinia / [code here](https://github.com/nuxt/learn.nuxt.com/commit/9913b51d47dedfe6c0681568e309aa02b24020a4)
+Commit: [/ feat: refactor using pinia /](https://github.com/nuxt/learn.nuxt.com/commit/9913b51d47dedfe6c0681568e309aa02b24020a4)
 
 Observation: the mount() is in the store, however we only want to call and operate this once... ... so lets move it to the webcontainer.  Antfu - shows refactor on this.
 

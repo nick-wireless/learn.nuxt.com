@@ -1,6 +1,13 @@
-#Episode 1 - Project Setup
+# Episode 1 - Project Setup
+## Heading 2 Styling
+### Heading 3 Styling
 
-Moreover, the actual build process is part of the process for learning and demonstrating Nuxt, so lets see how we go.
+Interested in how this process will play out.  We are building a Playground, inspired by the Svelte Learn Playground.  Antfu's programming style mixes UI implementation with Application logic.  Tweaks to the actual direction will be as follows:
+(i) Consider use for reproducing bugs or environments for sharing.
+(ii) Consider application to demostrate Nuxt's integration between SPA and SSR modes.
+(iii) The architecture will showcase some of VueJS and Nuxt's core packages, module and package workflow (and Antfu's workflow).
+
+Antfu says, 'The actual build process is part of the process for learning and demonstrating Nuxt, so lets see how we go.'  Remember contributions and recommendations are welcome.
 
 [0:06:20 Project Setup](https://www.youtube.com/watch?v=49WXr6kVBVI&t=380s)
 - Often Antfu defaults to his ready made templates (Vitesse or Vitesse Nuxt), in this instance will build from scratch.

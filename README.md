@@ -12,11 +12,11 @@ Hi, this is NH's notes on Antfu's video series, Learn.Nuxt.Com, which starts [he
 
 About me: I have only podcast involvement in software (8 yrs + of listening with Changlog and Friends).  I have read some books and tinkered at home.  I wonder if I should have focused on software engineering in my career, rather than property & business.  (I love spending time in my 'virtual shed' with all the great tools of the web.  I particularly love the Vue & Nuxt ecosystem).
 
-My personal attraction to this series is I sit side saddle with a hero, to make a SASS product.  Something I might also try to do by myself one day.
+My personal attraction to this series is we are invited to sit virtually side saddle with a web hero, Anthony Fu (Antfu), to make a SASS product.  This is something I'd also like to do one day, so am doing a deep dive on his coding practices.
 
-What follows below are some more detailed notes taken directly from the episodes.  I follow the chapters set up by Antfu and tried to be a diligent student also linking to resources and doing a longer scan of them than Antfu typically needs to.  That said, as a beginner and as fitting this in between life, I'm keeping short and sharp as best I can.
+What follows below are some more detailed notes taken directly from the episodes.  I follow the chapter structure set up by Antfu and tried to be a diligent student also linking to resources and doing a longer scan of them than Antfu typically needs to.  That said, as a beginner and fitting this in between life, I'm keeping short and sharp as best I can.
 
-So to help others, my notation and method described:
+To help others, my note taking notation and method described is described here:
 - H2 format is Antfu's headings, H3 sub-headings are my own grouping of concepts and sub-chapters to help my search & find later.
 - [ this typically refers to code ] , meaning placing code comments between the brackets, which might also refer to the headline of the a key concept being discussed.
 - Footnotes are a little extrapolation my end; usually interesting call outs based on readings of links provided, which may also interest you.
@@ -26,10 +26,14 @@ Re. actual code: well, the Video and Antfu's Github pushes are the real source o
 
 PR's / recommendation or learnings from others to this repo to improve its usefulness, they are welcome.  I'll try to keep the writing in my own voice and I apologize in advance, for terrible grammar and spelling where it exists.
 
-******
-Footnote 1: a tip of the hat to deep thank you to Antfu.
+***
+Footnote 1: a tip of the hat and deep thank you to Antfu.
 
-To me the ecosystem and future of Vue, Nuxt, Vite, Nitro, UnoCss etc. seems bright.  To me, those involved appear as modern day demigods with superpowers and tremendous intuition & energy to do great things.  Antfu personifies the new wave and energy to a 'T' and as such I am choosing to peak into his workflows as a conscious choice to learn from such great people.
+To me the ecosystem and future of Vue, Nuxt, Vite, Nitro, UnoCss etc. seems bright.  In my view, those involved appear as modern day demigods with superpowers and tremendous intuition & energy to do great things.
+
+Antfu personifies the new wave of leaders and energy perfectly, his art (software) is impressive and his output is testomony in my mind to the beautiful online-tools he has chosen.  Thank you Anthony, and all the leaders (Evan, Sebastian, Daniel etc) who come before to give us all momentum!
+
+***
 
 # Episode 1 - Project Setup
 

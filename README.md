@@ -47,9 +47,9 @@ Antfu says, 'The actual build process is part of the process, so lets see how we
 
 ## [0:06:20 Project Setup](https://www.youtube.com/watch?v=49WXr6kVBVI&t=380s)
 - Often Antfu defaults to his ready made templates (Vitesse or Vitesse Nuxt), in this instance will build from scratch.
-- Discussion: about Antfu's settings, for this has a link with all the info [[ antfu/use ]](https://github.com/antfu/use).
-  - "windows.nativeTabs": true, ... in VSCode to get the project to a tab view (MacOS only).
-  - [ ni ] in the terminal, is an alias to [ npm i ] or similar, however it will automatically choose the right package manager you are using in the project. See here for more details [[ antfu/ni ]](https://github.com/antfu/ni).
+- Discussion: about Antfu's settings, for this has a link with all the info [`antfu/use`](https://github.com/antfu/use).
+  - `"windows.nativeTabs": true`, ... in VSCode to get the project to a tab view (MacOS only).
+  - [ ni ] in the terminal, is an alias to [ npm i ] or similar, however it will automatically choose the right package manager you are using in the project. See here for more details [`antfu/ni`](https://github.com/antfu/ni).
 
 ### Installing packages & setup
 - Antfu follow documentation sites and implements from scratch for this project.

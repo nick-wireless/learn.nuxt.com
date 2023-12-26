@@ -1,6 +1,6 @@
+# [Episode 2 - Nuxt Content & Resizable Panels](https://www.youtube.com/live/mDjI1uR-s-M?si=Nsvkq8rm9GlZ61r6)
+Preamble: Anthony would love to progress the project together, feel free to jump in yourself.
 
-[## Chapter 1 - UI Tweaks](https://www.youtube.com/live/mDjI1uR-s-M?si=gBGANUDenMikl8gC&t=405)
-Anthony would love to progress the project together, feel free to jump in yourself.
 Reviewing commits between videos:
 - FitAddon from 'xterm-addon-fit', allows the terminal component to resize dynamically
 - Repositioned color-mode button to the top.
@@ -12,7 +12,9 @@ Loads up page...
     - Park issue for now and revert later.
 - Consider container & situation of starting server sessions within server sessions.  (Instead stop the un-intended spawning of these, to allow one instance of HLR).
 
-[### Discussion on how to implement a desing system](https://www.youtube.com/live/mDjI1uR-s-M?si=eF6M00ycU-F1wfqY&t=1279)
+## [0:06:50 UI Tweaks](https://www.youtube.com/live/mDjI1uR-s-M?si=gBGANUDenMikl8gC&t=405)
+
+### [Discussion on how to implement a desing system](https://www.youtube.com/live/mDjI1uR-s-M?si=eF6M00ycU-F1wfqY&t=1279)
 Reference the new Nuxt design scheme, see [here](https://nuxt.com/blog/new-website).
 - Start by loading background preset shortcuts found in uno.config.ts, 'bg-base' in this instance input hash, 'bg-[#020420]'
 - Discusses pros and cons of applying a bg to the layout.  Antfu's pref is to apply within app.vue, under the html or body tag.  In this way, is applied across all elements.

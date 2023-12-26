@@ -1,7 +1,8 @@
 # Index
-[Episode 1 - Project Setup](#Episode 1 - Project Setup)
-[Episode 2 - Nuxt Conten & Resizable Panels](#Episode 2 - Nuxt Content & Resizable Panels)
-[Episode 3 - Pinia & Editor Refactors](#Episode 3 - Pinia & Editor & Refactors)
+
+- [Episode 1 - Project Setup](#episode-1---project-setup)
+- [Episode 2 - Nuxt Content & Resizable Panels](#episode-2---nuxt-content--resizable-panels)
+- [Episode 3 - Pinia & Editor Refactors](#episode-3---pinia--editor-refactors)
 
 ***
 

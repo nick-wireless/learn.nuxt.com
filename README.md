@@ -1,20 +1,44 @@
 # Episode 1 - Project Setup
-## Heading 2 Styling
-### Heading 3 Styling
+PREAMBLE:
+Hi, this is NH's notes on Antfu's video series, Learn.Nuxt.Com, which starts [here](https://www.youtube.com/live/49WXr6kVBVI?si=DO8OM44OG---GD6R).
 
-Interested in how this process will play out.  We are building a Playground, inspired by the Svelte Learn Playground.  Antfu's programming style mixes UI implementation with Application logic.  Tweaks to the actual direction will be as follows:
-(i) Consider use for reproducing bugs or environments for sharing.
+About me: I have only podcast involvement in software (8 yrs + of listening with Changlog and Friends).  I have read some books and tinkered at home.  I wonder if I should have focused on software engineering in my career, rather than property & business.  (I love spending time in my 'virtual shed' with all the great tools of the web.  I particularly love the Vue & Nuxt ecosystem and heros within it).
+
+My personal attraction to this series is I sit side saddle with a hero, to make a SASS product.  Something I might also get to one day.
+
+What follows below are some more detailed notes taken directly from the episodes.  I follow the chapters set up by Antfu and tried to be a diligent student also linking to resources and doing a longer scan of them than Antfu typically needs to.  That said, as a beginner and as fitting this in between life, I'm keeping short and sharp as best I can.
+
+So to help others, my notation and method described:
+- H2 format is Antfu's headings, H3 sub-headings are my own grouping of concepts and sub-chapters to help my search & find later.
+- [ this typically refers to code ] , meaning placing code comments between the brackets, which might also refer to the headline of the a key concept being discussed.
+- Footnotes are a little extrapolation my end; usually interesting call outs based on readings of links provided, which may also interest you.
+- (NH), refers to my own words, sometime taking liberty of interpretation of Antfu's words, in-line within Antfu's other comments.  These (NH) comments may jump to conclusions which would land the reader in the wrong spot.  (I call them out, as a 'reader beware', as I might be completely off track with these notes).
+
+Re. actual code: well, the Video and Antfu's Github pushes are the real source of truth and great reference.  I've tried to add these to the summary too.
+
+PR's / recommendation or learnings from others to this repo to improve its usefulness are welcome.  I'll try to keep in my own voice and I apologize in advance, for terrible grammar, spelling where it exists.
+
+******
+Footnote 1: a tip of the hat to deep thank you to Antfu.  The ecosystem and future of Vue, Nuxt, Vite, Nitro, UnoCss etc. seems bright to me.  To me, all involved appear as modern day demigods with superpowers and tremendous intuition to do great things.  Antfu personifies the new wave to a 'T' and as such I am choosing to peak into his workflows as a conscious choice to learn from such people.
+
+It feels of a fashion, we are able to stand in the shadow (and on the shoulders) of modern day greats.  I only hope I can find the time to put some of their great tools to practical use too.  (I think I like the learning cycle more than the doing cycle).
+
+
+## [0:00:00 Launch Of Project - General Discussion](https://www.youtube.com/live/49WXr6kVBVI?si=SAOWJIp038Dds7on)
+Antfu is interested in how this process will play out.  We are building a Playground, inspired by the Svelte Learn Playground, see [here](https://learn.svelte.dev/tutorial/welcome-to-svelte) for that inspiration.  Antfu's programming style mixes UI implementation with Application logic.  Additional tweaks to a 'learning resouse' will be as follows:
+(i) Consider use for reproducing bugs or issues environments for sharing.
 (ii) Consider application to demostrate Nuxt's integration between SPA and SSR modes.
-(iii) The architecture will showcase some of VueJS and Nuxt's core packages, module and package workflow (and Antfu's workflow).
+(iii) The architecture will showcase some of VueJS, Typscript and Nuxt's core packages, module and package workflow (and Antfu's workflow).
 
-Antfu says, 'The actual build process is part of the process for learning and demonstrating Nuxt, so lets see how we go.'  Remember contributions and recommendations are welcome.
+Antfu says, 'The actual build process is part of the process, so lets see how we go.'  Remember contributions and recommendations are welcome.
 
-[0:06:20 Project Setup](https://www.youtube.com/watch?v=49WXr6kVBVI&t=380s)
+[## 0:06:20 Project Setup](https://www.youtube.com/watch?v=49WXr6kVBVI&t=380s)
 - Often Antfu defaults to his ready made templates (Vitesse or Vitesse Nuxt), in this instance will build from scratch.
 - Discussion: about Antfu's settings, for this has a link with all the info [[ antfu/use ]](https://github.com/antfu/use).
   - "windows.nativeTabs": true, ... in VSCode to get the project to a tab view (MacOS only).
   - [ ni ] in the terminal, is an alias to [ npm i ] or similar, however it will automatically choose the right package manager you are using in the project. See here for more details [[ antfu/ni ]](https://github.com/antfu/ni).
 
+### Installing packages & setup
 - Antfu follow documentation sites and implements from scratch for this project.
   - [Nuxt docs](https://nuxt.com/docs/getting-started/installation#new-project) - choosing [ npx nuxi-latest init learn.nuxt.com ] 
   - [Adding Modules](https://nuxt.com/blog/v3-8#%EF%B8%8F-nitro-v27) - chosing [ nuxi module add <module-name> ].

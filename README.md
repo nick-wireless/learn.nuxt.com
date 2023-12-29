@@ -3,6 +3,7 @@
 - [Episode 1 - Project Setup](#episode-1---project-setup)
 - [Episode 2 - Nuxt Content & Resizable Panels](#episode-2---nuxt-content--resizable-panels)
 - [Episode 3 - Pinia & Editor Refactors](#episode-3---pinia--editor-refactors)
+- [Episode 4 - Frame Communications](#episode-4---frame-communications)
 
 ***
 
@@ -440,4 +441,85 @@ Observation: the `mount()` is in the store, however we only want to call and ope
 Qu: why useCookie over useLocalStorage?  Ans: because we want the opportunity of the state to come from the server.
 
 
+
+
+# [Episode 4 - Frame Communications]{https://www.youtube.com/live/bUumUU8z1Oo?si=mKZ7xfwsxobKjGuY}
+
+
+## [0:00:00 Preparation](https://www.youtube.com/live/bUumUU8z1Oo?si=mKZ7xfwsxobKjGuY)
+- Antfu, is getting used to speaking while also coding.  A new experience for him.
+Opening Code: [/ feat: show panel loading status /](https://github.com/nuxt/learn.nuxt.com/commit/f6d4f5a675774083610ee5db113f7df03a02eb17)
+
+## [0:05:55 Changes recap](https://www.youtube.com/live/bUumUU8z1Oo?si=pRn-LwIkOH9NoqWG&t=356)
+- Antfu opens editor on teh 'feat: show loading status' commit, which is 16 commits ahead the 'feat: refactor using pinia' commit of previous episode.
+Review:
+- In 3rd episode of last week, we fixed `wc.on('server-ready')` composable.
+- Improved text area input to code editor, for functionality.
+- Other:
+  - Renamed: File to VirtualFile (to avoid conflict)
+  - Rename: PanelGuide to PanelDocs (to be more consistent with intent)
+  - Enable minify: for production.
+  - Discussed `templates/basic/basic.ts`, used for loading files: implementing an async chunk to imports, to improve performance.
+  - Implemented styling for terminal.
+  - Move communicaiton logic (of playground preview) to a Plugin: to consistently inject in spun up projects. (NH)
+  - Frame-to-parent Communication: with WebRPC, considering as a direction for further communicaiton ability, Antfu acknowledges assistance.
+  - UI Improvement: Color-mode, to pick up user's preference from the session ([commit here](https://github.com/nuxt/learn.nuxt.com/commit/d1aec8c1abaf971d4ac11074df61c86d309bc333))
+  - SplitPanel: Allows work around for split-panels to work on server as well as client.
+  - Progress updates: providing a progress update UI to show you the stages of the booting of progress. 
+
+## [0:21:45 Sync color mode](https://www.youtube.com/live/bUumUU8z1Oo?si=pRn-LwIkOH9NoqWG&t=1305)
+Next steps: consider the preview pane, to have styles (a) in line with the surrounding styles of playground and then (b) also allow over-riding with the project app's own styles if present.
+- Lets focus on the playground representation itself.
+  - Demonstrates how adds `base.css` to the internal project via the `nuxt.config.ts`.
+  - Next, adds an `eventListener` through the plugin architecture to listen to the parent - now listens.
+  - Lets setup up a level and talk to through the iframe to let it know our color-mode.
+    - Consider timing of load and presence of frame.
+    - Antfu, demonstrates how to load once, then to extract as a `syncColorMode()`, which is implimented through a `watch(colorMode, syncColorMode)` watcher.
+      - Discuss attribute of `{ flush: 'sync' }` within the watcher, [here](https://www.youtube.com/live/bUumUU8z1Oo?si=syd0t6PEzxWob0-A&t=2220).
+      - Discuss Vite's need for pre-loading Pinia's states through HMR.  Pinia allows for this functionality, see [here](https://pinia.vuejs.org/cookbook/hot-module-replacement.html) for documentation reference which Antfu implemented.
+    - Antfu, now is looking at the flash and considering the inner playground instance would be better off starting in dark mode.
+      - Considered (a) adding through `nuxt.config.ts` a script, but...
+      - Opted for directly `htmlAttrs: { class: 'dark'}`.
+      - Here is another (better) way: consider .nuxtrc file to do the same job.  Script becomes: `app.head.htmAttrs.class=dark`.
+    - Antfu... realises, now that we can inject the file, lets only inject if the colormode is in the beginning dark, otherwise leave as light.  (And shows us how to add a file to `tree`).
+
+
+## [0:55:05 Hide Nuxt Loading Screen](https://www.youtube.com/live/bUumUU8z1Oo?si=pRn-LwIkOH9NoqWG&t=3305)
+Next... lets tackle the loading screen to prevent the 'Nuxt Preview' large screen:
+  - Nuxt Client polls the server until it is ready.  Consider the loading screen template code, found [here](https://github.com/nuxt/assets/blob/main/packages/templates/templates/loading/index.html).
+  - Antfu shows a pattern that can hang a function call until a promise is resolved in another function.
+    - Current path (implemented in the webcontainer) hitting no-cor errors, so... consider instead to implement in the iframe.  (This includes a switch case for `play.status = 'ready'` within the webContainer composable.)
+
+Commit: [/ feat: hide Nuxt loading screen /](https://github.com/nuxt/learn.nuxt.com/commit/d32311acd11564bec78357efe1dd9fc52434e83d?diff=unified&w=0)
+
+## [1:20:30 Use RPC for communication](https://www.youtube.com/live/bUumUU8z1Oo?si=pRn-LwIkOH9NoqWG&t=4830)
+RPC System: a remote proceedural call, instead of the window.addEventListeners etc. [RPC wiki, here](https://en.wikipedia.org/wiki/Remote_procedure_call).
+- Antfu calls out tRPC, which is RPC with type system.  This streamlines business logic communication between front end and backend.
+- One good package is [tRPC.io](https://trpc.io/).
+- There is also a more lightweight version (which Antfu made)... called [birpc](https://github.com/antfu/birpc).  (NH: it has 0 dependencies and is circa 0.5kb).
+  - BIRPC - stands for bi-directional RPC.
+  - We'll go in this direction, because our instance is particular: we control both the client side and server side code; there is a low chance of missalignment of versions (in the one code base).
+  - It essentially adds types to the messages.
+
+For the coding:
+- Begin with adding the types.
+- Extracts the logic of the CLIENT for the messages & color change to Client & Server (renamed as FrameFunctions & ParentFunctions respectively, in this instance).
+- When considering the SERVER (webContainer.ts), these functions are received in reverse.  (BiRPC is isomorphic - same for both instance, but for the swapping of posts).
+  - Note: there is an instance where RPC could be created, however the servers may not be there yet.k
+  - Bug fix: colorMode through the implementation.
+
+Commit: [/ add birpc for communication /](https://github.com/nuxt/learn.nuxt.com/commit/3818f938ba1d6705f397f218c7577102959acc15?diff=split&w=0)
+
+Note:
+1. If wish to add co-author for the github push, sometimes the functionality of Github / GitLens doesn't allow authors who are not already registered contributors.  That said, Antfu shows a way around that, for which Github will then pick up the thread and credit them.
+2. By using `close #39` or such, that links also to the issue within the Github Repo, '#' is the operator that makes that work.  (Note, this automatically closes the commit as well.  It also links the commit's code to the closed item.)
+
+For a full list of the attributes that you can use, see [Github's docs here](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword).
+
+## [2:05:00 Q&A](https://www.youtube.com/live/bUumUU8z1Oo?si=pRn-LwIkOH9NoqWG&t=7500)
+- Discusses Vite's implementation of birpc.
+- What tools for versioning?: bumpp... 
+  - Creates a tag, a new number and gitcommit
+  - These are done by actions and also creates the changelog.
+- Icons in browser: File Icons for Github & Gitlab (for Chrome and VSCode) - found [here](https://chromewebstore.google.com/detail/file-icons-for-github-and/ficfmibkjjnpogdcfhfokmihanoldbfe?utm_source=ext_app_menu).
 

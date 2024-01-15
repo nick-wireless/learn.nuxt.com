@@ -1,10 +1,11 @@
+/* Splitpanes */
 .splitpanes--vertical > .splitpanes__splitter {
   width: 16px;
   margin: 0 -8px;
   background: transparent;
-  z-index: 10;
   position: relative;
   transition: background 0.2s ease;
+  --uno: z-splitter;
 }
 .splitpanes--vertical > .splitpanes__splitter:hover {
   background: #8882;
@@ -23,9 +24,9 @@
   height: 16px;
   margin: -8px 0;
   background: transparent;
-  z-index: 10;
   position: relative;
   transition: background 0.2s ease;
+  --uno: z-splitter;
 }
 .splitpanes--horizontal > .splitpanes__splitter:hover {
   background: #8882;
@@ -44,6 +45,7 @@
   display: none;
 }
 
+/* Xterm */
 .terminal.xterm {
   height: 100%;
   padding: 0 1.5em;
@@ -51,4 +53,22 @@
 
 .terminal.xterm .xterm-rows {
   --uno: font-mono;
+}
+
+/* Floating Vue */
+.v-popper--theme-dropdown .v-popper__inner {
+  --uno: bg-base border-base border;
+  color: inherit;
+}
+
+.v-popper__popper .v-popper__arrow-outer {
+  --uno: border-base;
+}
+
+.v-popper__popper .v-popper__arrow-inner {
+  --uno: border-white dark-border-[#020420];
+}
+
+.v-popper {
+  --uno: flex items-center justify-center;
 }

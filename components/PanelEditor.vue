@@ -1,43 +1,27 @@
 <script setup lang="ts">
 import { Pane, Splitpanes } from 'splitpanes'
-import type { VirtualFile } from '~/structures/VirtualFile'
 import { filesToVirtualFsTree } from '~/templates/utils'
 
-const props = withDefaults(
-  defineProps<{
-    files: VirtualFile[]
-  }>(),
-  {
-    files: () => [],
+const play = usePlaygroundStore()
+const ui = useUiState()
+const guide = useGuideStore()
+
+const files = computed(() => Array.from(play.files.values()).filter(file => !isFileIgnored(file.filepath)))
+const directory = computed(() => filesToVirtualFsTree(files.value))
+
+const input = ref<string>('')
+
+watch(
+  () => [play.fileSelected, guide.currentGuide, guide.showingSolution],
+  () => {
+    input.value = play.fileSelected?.read() || ''
   },
 )
 
-const ui = useUiState()
-
-const files = computed(() => props.files.filter(file => !isFileIgnored(file.filepath)))
-const directory = computed(() => filesToVirtualFsTree(files.value))
-
-const selectedFile = ref<VirtualFile>()
-const input = ref<string>('')
-
-// Select the first file by default.
-watchEffect(() => {
-  if (selectedFile.value == null && files.value.length > 0)
-    selectFile(files.value[0])
-})
-
-function selectFile(file: VirtualFile) {
-  selectedFile.value = file
-}
-
-watch(selectedFile, (file) => {
-  input.value = file?.read() || ''
-})
-
-function onTextInput() {
-  // TODO: add throttle
+const onTextInput = useDebounceFn(_onTextInput, 500)
+function _onTextInput() {
   if (input.value != null)
-    selectedFile?.value?.write(input.value)
+    play?.fileSelected?.write(input.value)
 }
 
 function startDragging() {
@@ -73,6 +57,7 @@ const panelInitEditor = computed(() => isMounted.value || {
       <span text-sm>Editor</span>
     </div>
     <Splitpanes
+      of-hidden
       @resize="startDragging"
       @resized="endDragging"
     >
@@ -82,7 +67,7 @@ const panelInitEditor = computed(() => isMounted.value || {
         :style="panelInitFileTree"
       >
         <PanelEditorFileSystemTree
-          v-model="selectedFile"
+          v-model="play.fileSelected"
           :directory="directory"
           :depth="-1"
         />
@@ -93,9 +78,9 @@ const panelInitEditor = computed(() => isMounted.value || {
         :style="panelInitEditor"
       >
         <LazyPanelEditorMonaco
-          v-if="selectedFile"
+          v-if="play.fileSelected"
           v-model="input"
-          :filepath="selectedFile.filepath"
+          :filepath="play.fileSelected.filepath"
           h-full w-full
           @change="onTextInput"
         />

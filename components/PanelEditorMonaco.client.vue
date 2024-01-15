@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
-import { loadGrammars } from '~/monaco/grammars'
+import * as monaco from 'monaco-editor-core/esm/vs/editor/editor.api'
+import { shikijiToMonaco } from 'shikiji-monaco'
 import { initMonaco } from '~/monaco/setup'
-import { Store } from '~/monaco/env'
+import { reloadLanguageTools } from '~/monaco/env'
+import { getShikiji } from '~/monaco/shikiji'
 
 const props = defineProps<{
   modelValue: string
@@ -15,14 +16,8 @@ const emit = defineEmits<{
 }>()
 
 const play = usePlaygroundStore()
-const store = new Store()
 
-// TODO: refactor this out
-watchEffect(() => {
-  store.state.files = play.files.map(i => i.filepath)
-})
-
-initMonaco(store)
+initMonaco(play)
 
 const el = ref<HTMLDivElement>()
 
@@ -49,8 +44,8 @@ const language = computed(() => {
   }
 })
 const theme = computed(() => colorMode.value === 'dark'
-  ? 'theme-dark'
-  : 'theme-light',
+  ? 'vitesse-black'
+  : 'vitesse-light',
 )
 
 function getModel(filepath: string) {
@@ -76,29 +71,32 @@ watch(
     if (!value)
       return
 
+    const shiki = await getShikiji()
+    shikijiToMonaco(shiki, monaco)
+
     const editor = monaco.editor.create(
       value,
       {
-        'model': getModel(props.filepath),
-        'theme': theme.value,
-        'fontSize': 14,
-        'bracketPairColorization': {
+        model: getModel(props.filepath),
+        theme: theme.value,
+        fontSize: 14,
+        bracketPairColorization: {
           enabled: false,
         },
-        'glyphMargin': false,
-        'automaticLayout': true,
-        'folding': false,
-        'lineDecorationsWidth': 10,
-        'lineNumbersMinChars': 3,
-        'fontFamily': 'DM Mono, monospace',
-        'minimap': {
+        glyphMargin: false,
+        automaticLayout: true,
+        folding: false,
+        lineDecorationsWidth: 10,
+        lineNumbersMinChars: 3,
+        fontFamily: 'DM Mono, monospace',
+        minimap: {
           enabled: false,
         },
-        'padding': {
+        padding: {
           top: 8,
         },
-        'semanticHighlighting.enabled': true,
-        'overviewRulerLanes': 0,
+        overviewRulerLanes: 0,
+        fixedOverflowWidgets: true,
       },
     )
 
@@ -108,6 +106,8 @@ watch(
       emit('change', value)
     })
 
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {})
+
     watch(
       () => props.filepath,
       () => {
@@ -115,9 +115,29 @@ watch(
       },
     )
 
-    watch(theme, () => monaco.editor.setTheme(theme.value))
+    watch(
+      () => props.modelValue,
+      (value) => {
+        if (value === editor.getValue())
+          return
+        const selections = editor.getSelections()
+        const model = getModel(props.filepath)
+        model.setValue(value)
+        if (selections)
+          editor.setSelections(selections)
+      },
+    )
 
-    await loadGrammars(monaco, editor)
+    // Restart language tools when dependencies install finished
+    watch(
+      () => play.status,
+      (s) => {
+        if (s === 'ready')
+          reloadLanguageTools(play)
+      },
+    )
+
+    watch(theme, () => monaco.editor.setTheme(theme.value))
   },
 )
 </script>

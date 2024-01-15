@@ -1,19 +1,16 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable new-cap */
-import * as monaco from 'monaco-editor'
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+import * as monaco from 'monaco-editor-core'
+import editorWorker from 'monaco-editor-core/esm/vs/editor/editor.worker?worker'
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
 import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 
-// TODO: material-theme-palenight's format it not compatible with monaco
-import themeDark from 'theme-vitesse/themes/vitesse-black.json'
-import themeLight from 'theme-vitesse/themes/vitesse-light.json'
 import vueWorker from './vue.worker?worker'
-import { loadWasm, reloadLanguageTools } from './env'
-import type { Store } from './env'
+import { reloadLanguageTools } from './env'
 
-export function initMonaco(store: Store) {
+export function initMonaco(ctx: PlaygroundStore) {
+  // @ts-expect-error MonacoEnvironment is a global variable injected for monaco
   self.MonacoEnvironment = {
     async getWorker(_: any, label: string) {
       switch (label) {
@@ -41,30 +38,11 @@ export function initMonaco(store: Store) {
     },
   }
 
-  monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-    ...monaco.languages.typescript.typescriptDefaults.getCompilerOptions(),
-    noUnusedLocals: false,
-    noUnusedParameters: false,
-    allowUnreachableCode: true,
-    allowUnusedLabels: true,
-    strict: true,
-  })
-
   monaco.languages.register({ id: 'vue', extensions: ['.vue'] })
   monaco.languages.register({ id: 'javascript', extensions: ['.js'] })
   monaco.languages.register({ id: 'typescript', extensions: ['.ts'] })
   monaco.languages.register({ id: 'json', extensions: ['.json'] })
   monaco.languages.register({ id: 'html', extensions: ['.html'] })
 
-  const darkColors = (themeDark as any).colors as Record<string, string>
-  darkColors['editor.background'] = '#00000000'
-  darkColors['editor.lineHighlightBackground'] = '#00000000'
-
-  monaco.editor.defineTheme('theme-light', themeLight as any)
-  monaco.editor.defineTheme('theme-dark', themeDark as any)
-
-  monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true)
-  monaco.languages.onLanguage('vue', () => reloadLanguageTools(store))
-
-  loadWasm()
+  monaco.languages.onLanguage('vue', () => reloadLanguageTools(ctx))
 }

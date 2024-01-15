@@ -16,11 +16,17 @@ export default defineConfig({
     'bg-faded': 'bg-gray:5',
     'bg-base': 'bg-white dark:bg-[#020420]',
     'text-faded': 'text-gray6:100 dark:text-gray:100',
+
+    'z-embedded-docs': 'z-100',
+    'z-embedded-docs-raised': 'z-101',
+    'z-splitter': 'z-102',
+    'z-embedded-docs-close': 'z-103',
+    'z-index-command-palette': 'z-200',
   },
   theme: {
     colors: {
       primary: {
-        DEFAULT: '#00DC82',
+        DEFAULT: '#00c16a',
       },
     },
   },
@@ -31,7 +37,10 @@ export default defineConfig({
     presetWebFonts({
       provider: 'bunny',
       fonts: {
-        sans: 'DM Sans',
+        sans: {
+          name: 'DM Sans',
+          weights: [200, 400, 600, 700],
+        },
         mono: 'DM Mono',
       },
     }),

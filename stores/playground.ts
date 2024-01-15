@@ -1,72 +1,76 @@
 import type { Raw } from 'vue'
 import type { WebContainer, WebContainerProcess } from '@webcontainer/api'
-import type { VirtualFile } from '../structures/VirtualFile'
+import { VirtualFile } from '../structures/VirtualFile'
+import { filesToWebContainerFs } from '~/templates/utils'
 
 export const PlaygroundStatusOrder = [
   'init',
   'mount',
   'install',
   'start',
+  'polling',
   'ready',
+  'interactive',
 ] as const
 
 export type PlaygroundStatus = typeof PlaygroundStatusOrder[number] | 'error'
 
+const NUXT_PORT = 4000
+
 export const usePlaygroundStore = defineStore('playground', () => {
+  const preview = usePreviewStore()
+
   const status = ref<PlaygroundStatus>('init')
   const error = shallowRef<{ message: string }>()
   const currentProcess = shallowRef<Raw<WebContainerProcess | undefined>>()
-  const files = shallowRef<Raw<VirtualFile>[]>([])
   const webcontainer = shallowRef<Raw<WebContainer>>()
 
-  const previewLocation = ref({
-    origin: '',
-    fullPath: '',
-  })
-  const previewUrl = ref('')
-
-  function updatePreviewUrl() {
-    previewUrl.value = previewLocation.value.origin + previewLocation.value.fullPath
-  }
+  let filesTemplate: Record<string, string> = {}
+  const files = shallowReactive<Raw<Map<string, VirtualFile>>>(new Map())
+  const fileSelected = shallowRef<Raw<VirtualFile>>()
 
   const colorMode = useColorMode()
+  let _promiseInit: Promise<void> | undefined
+  let hasInstalled = false
 
   // Mount the playground on client side
   if (import.meta.client) {
-    async function mount() {
-      const { templates } = await import('../templates')
-      const { files: _files, tree } = await templates.basic({
-        nuxtrc: [
-          // Have color mode on initial load
-          colorMode.value === 'dark'
-            ? 'app.head.htmlAttrs.class=dark'
-            : '',
-        ],
-      })
+    async function init() {
+      const [
+        wc,
+        filesRaw,
+      ] = await Promise.all([
+        import('@webcontainer/api')
+          .then(({ WebContainer }) => WebContainer.boot()),
 
-      const wc = await import('@webcontainer/api')
-        .then(({ WebContainer }) => WebContainer.boot())
+        import('../templates')
+          .then(r => r.templates.basic({
+            nuxtrc: [
+              // Have color mode on initial load
+              colorMode.value === 'dark'
+                ? 'app.head.htmlAttrs.class=dark'
+                : '',
+            ],
+          })),
+      ])
 
+      filesTemplate = filesRaw
       webcontainer.value = wc
-      files.value = _files
 
-      // // TODO: not booting the webcontainer in dev mode
-      // if (import.meta.dev)
-      //   return
-
-      _files.forEach((file) => {
-        file.wc = wc
-      })
+      Object.entries(filesRaw)
+        .forEach(([path, content]) => {
+          files.set(path, new VirtualFile(path, content, wc))
+        })
 
       wc.on('server-ready', async (port, url) => {
         // Nuxt listen to multiple ports, and 'server-ready' is emitted for each of them
         // We need the main one
-        if (port === 3000) {
-          previewLocation.value = {
+        if (port === NUXT_PORT) {
+          preview.location = {
             origin: url,
             fullPath: '/',
           }
-          status.value = 'start'
+          status.value = 'polling'
         }
       })
 
@@ -76,7 +80,7 @@ export const usePlaygroundStore = defineStore('playground', () => {
       })
 
       status.value = 'mount'
-      await wc.mount(tree)
+      await wc.mount(filesToWebContainerFs([...files.values()]))
 
       startServer()
 
@@ -88,7 +92,7 @@ export const usePlaygroundStore = defineStore('playground', () => {
       }
     }
 
-    mount()
+    _promiseInit = init()
   }
 
   let abortController: AbortController | undefined
@@ -100,7 +104,7 @@ export const usePlaygroundStore = defineStore('playground', () => {
     currentProcess.value = undefined
   }
 
-  async function startServer() {
+  async function startServer(reinstall = false) {
     if (!import.meta.client)
       return
 
@@ -110,14 +114,26 @@ export const usePlaygroundStore = defineStore('playground', () => {
     abortController = new AbortController()
     const signal = abortController.signal
 
-    await launchDefaultProcess(wc, signal)
+    if (reinstall)
+      hasInstalled = false
+
+    if (!hasInstalled)
+      await launchInstallProcess(wc, signal)
+
+    if (hasInstalled)
+      await launchNuxtProcess(wc, signal)
+
     await launchInteractiveProcess(wc, signal)
   }
 
   async function spawn(wc: WebContainer, command: string, args: string[] = []) {
     if (currentProcess.value)
       throw new Error('A process is already running')
-    const process = await wc.spawn(command, args)
+    const process = await wc.spawn(command, args, {
+      env: {
+        NUXT_PORT: NUXT_PORT.toString(),
+      },
+    })
     currentProcess.value = process
     return process.exit.then((r) => {
       if (currentProcess.value === process)
@@ -126,13 +142,11 @@ export const usePlaygroundStore = defineStore('playground', () => {
     })
   }
 
-  async function launchDefaultProcess(wc: WebContainer, signal: AbortSignal) {
-    if (!wc)
-      return
-    status.value = 'install'
-
+  async function launchInstallProcess(wc: WebContainer, signal: AbortSignal) {
     if (signal.aborted)
       return
+
+    status.value = 'install'
 
     const installExitCode = await spawn(wc, 'pnpm', ['install'])
     if (signal.aborted)
@@ -144,76 +158,83 @@ export const usePlaygroundStore = defineStore('playground', () => {
         message: `Unable to run npm install, exit as ${installExitCode}`,
       }
       console.error('Unable to run npm install')
-      return
+      return false
     }
 
+    hasInstalled = true
+  }
+
+  async function launchNuxtProcess(wc: WebContainer, signal: AbortSignal) {
+    if (signal.aborted)
+      return
+    status.value = 'start'
     await spawn(wc, 'pnpm', ['run', 'dev', '--no-qr'])
   }
 
   async function launchInteractiveProcess(wc: WebContainer, signal: AbortSignal) {
     if (signal.aborted)
       return
+    status.value = 'interactive'
     await spawn(wc, 'jsh')
   }
 
-  async function downloadZip() {
-    if (!import.meta.client)
-      return
+  async function _updateOrCreateFile(filepath: string, content: string) {
+    const file = files.get(filepath)
+    if (file) {
+      if (file.read() !== content)
+        await file.write(content)
+      return file
+    }
+    else {
+      const newFile = new VirtualFile(filepath, content, webcontainer.value!)
+      files.set(filepath, newFile)
+      await newFile.write(content)
+      return newFile
+    }
+  }
 
-    const wc = webcontainer.value!
-
-    const { default: JSZip } = await import('jszip')
-    const zip = new JSZip()
-
-    type Zip = typeof zip
-
-    const crawlFiles = async (dir: string, zip: Zip) => {
-      const files = await wc.fs.readdir(dir, { withFileTypes: true })
-
-      await Promise.all(
-        files.map(async (file) => {
-          if (isFileIgnored(file.name))
-            return
-
-          if (file.isFile()) {
-            // TODO: If it's package.json, we modify to remove some fields
-            const content = await wc.fs.readFile(`${dir}/${file.name}`, 'utf8')
-            zip.file(file.name, content)
-          }
-          else if (file.isDirectory()) {
-            const folder = zip.folder(file.name)!
-            return crawlFiles(`${dir}/${file.name}`, folder)
-          }
-        }),
-      )
+  /**
+   * Mount files to WebContainer.
+   * This will do a diff with the current files and only update the ones that changed
+   */
+  async function mount(map: Record<string, string>, templates = filesTemplate) {
+    const objects = {
+      ...templates,
+      ...map,
     }
 
-    await crawlFiles('.', zip)
-
-    const blob = await zip.generateAsync({ type: 'blob' })
-    const url = URL.createObjectURL(blob)
-    const date = new Date()
-    const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`
-    const link = document.createElement('a')
-    link.href = url
-    // TODO: have a better name with the current tutorial name
-    link.download = `nuxt-playground-${dateString}.zip`
-    link.click()
-    link.remove()
-    URL.revokeObjectURL(url)
+    await Promise.all([
+      // update or create files
+      ...Object.entries(objects)
+        .map(async ([filepath, content]) => {
+          await _updateOrCreateFile(filepath, content)
+        }),
+      // remove extra files
+      ...Array.from(files.keys())
+        .filter(filepath => !(filepath in objects))
+        .map(async (filepath) => {
+          const file = files.get(filepath)
+          await file?.remove()
+          files.delete(filepath)
+        }),
+    ])
   }
 
   return {
+    get init() {
+      return _promiseInit
+    },
+
+    webcontainer,
     status,
     error,
     currentProcess,
-    files,
-    webcontainer,
-    previewUrl,
-    updatePreviewUrl,
-    previewLocation,
+
     restartServer: startServer,
-    downloadZip,
+
+    files,
+    fileSelected,
+    mount,
   }
 })
 

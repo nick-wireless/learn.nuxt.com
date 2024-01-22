@@ -646,3 +646,113 @@ Commit: [/ feat: add download as zip button /](https://github.com/nuxt/learn.nux
 
 - Discussion on general performance.
 - Probably will continue, helps having a project with well defined goals.
+
+# [Episode 6 - Mastering Pinia with Eduardo](https://www.youtube.com/live/kevpEOR1mrw?si=CjSqAR6b-bevPv4_)
+
+# [0:00:00 Video Testing]()
+
+Featuring special guest, master of Pinia, Eduardo.
+Pinia docs [here](https://pinia.vuejs.org/).
+
+# [0:01:22 Master Pinia with Eduardo](https://www.youtube.com/live/kevpEOR1mrw?si=Q-Ed949S8Sjkzxei&t=82)
+
+- Antfu talks about Eduard helping out with a pull request for the playground.
+- Eduardo through the commit points out type inference is easier, [commit](https://github.com/nuxt/learn.nuxt.com/commit/9913b51d47dedfe6c0681568e309aa02b24020a4).
+- Talks about, 'letting the types flow', meaning often you don't have to be prosciptive with solutions. Pinia infers a lot from the codebases used.
+- To do that, put the types as close to the variables as possible. ... ...
+  ... technical issues, fixed after [here](https://www.youtube.com/live/kevpEOR1mrw?si=ZP-QCoFfCP5tV5wz&t=999).
+
+Note: good VSCode demonstration of [LiveShare](https://code.visualstudio.com/learn/collaboration/live-share).
+
+- Eduardo talks about the 'recoginition' capabilities of Pinia for other libraries. In that case advises Antfu to consider internalising the return, to keep actions proud (availabile).
+- Antfu asks: 'Is there a difference between Pinia's actions, vs. actions i put in my own objects?'
+  - Answers:
+    - Can have better devtools interactions, and or pre-action activities.
+    - Debouce, Undo-Redo, Error tracking (e.g. to Sentry in production) etc.
+    - Actions can become in this way 'transactions', you can also... invent new patterns.
+    - (Capabilities there... however, haven't really pushed the feature out there much... )
+  - Antfu, considers it a bit like 'decorators'... Eduardo, yes... only syntax a little more clunky.
+  - Discussions breaks new ground... re. type inference and possible mutating of objects (should you choose).
+- Antfu asks: 'Is there any conventions for separating state and actions', Antfu considers the structure of the properties within the object / store is long and may benefit from sub-grouping.
+  - Answer:
+    - Consider properties almost like you do components, you can break them out... into other stores.
+    - Sometimes it doesn't make sense to separate the properties, but you might choose to separate the logic.
+    - It becomes composables within composables.
+- Antfu leans towards a 'useClientOnlyStore' and 'serverStore' presented in a merged object... what do you think on that?
+  - Ans, probably still struggle with where the bundling goes.
+  - Could tackle by plugin.
+  - Key consideration: 'only write the store once.'
+  - Eduardo discusses, tention between 'configuration over convention'... ask yourself, are you saving much code, if not probably stick with convention.
+- Eduardo takes over, showing his preferred approach:
+  - Considers moving zip function across.
+  - Store: has to be syncronous (not asyncronous).
+  - Consider placement of playground within onMounted... possible to invoke on load or invoke by actions. (Antfu's requirements: immeditately but lets export a promise, so it is async).
+  - Shows a hack, around naming issue (with `file: _file`).
+  - Discuss shortcut CNT+D, and then
+  - Alt(windows), Option(mac) for jumping multiple cursors around (equivalent of whole word and can use delete with it to)
+- Antfu observes, Pinia is also a singleton, so also put WC items in the store.
+  - In refactor, highlights (actions) need to be moved outside the store.
+  - Then run / implement the dev server and demonstrate Vue's devtools, after finding Pinia.
+  - Consider pros & cons of extracting sub-functions of the existing store (such as downloadPlayground) discuss case for both sides, [here](https://www.youtube.com/live/kevpEOR1mrw?si=4R9c14FK9pOfJOZS&t=3800).
+  - Discussion re. folder structure and Pinia crawler. (It only crawls one level.)
+  - Talking about studytime required for Pinia Course. With exercises could span a couple of weeks.
+
+# [1:11:28 Changes catch up](https://www.youtube.com/live/kevpEOR1mrw?si=q1yEnhjR7qP9Hz2u&t=4288)
+
+- Antfu talks about the changes that have been made in order to do a final review before committing, thinking how everything fits in the context of the whole app.
+- Sets up a guard to return early if `!import.meta.client`, note the import.meta.client is a shortcut that other bundlers (like Vite). A variable that will be defined at build time.
+  - Rollup will through this for the server bundle remove unused code.
+  - Removes a guard that will never be triggered.
+- Antfu demonstrates how to close live share.
+
+Commit: [/ refactor: move playground logic into pinia store /](https://github.com/nuxt/learn.nuxt.com/commit/94a5efd71050915adedde6700d79352343bc9663)
+
+Next, Antfu discussed the PRs between episodes.
+
+- [Commit 47](https://github.com/nuxt/learn.nuxt.com/commit/e4456b8a7399eb33c678d9dc107977a7f0007801), preventing the ability to resize text-input areas, with `resize-none`. See [Tailwind docs](https://tailwindcss.com/docs/resize) or [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/resize) for more.
+- [Chore](https://github.com/nuxt/learn.nuxt.com/commit/3272e98d4da91e28a2b013bd346df4165502830c) noting the terminal now starts hidden, changed presets, which will dynamically change when opened.
+- [Chore](https://github.com/nuxt/learn.nuxt.com/commit/edfbfc54f540dbecc2353308c618c1de824b382d) removes WebQR code from startup, which is a flag that can be disabled. Antfu has a place to hide for developer ergonomics.
+- [Chore](https://github.com/nuxt/learn.nuxt.com/commit/0f5f0fc0193925f7c1b859657375bd77031ad5e1) removes BIRPC into its own location hidden from the playground view. (Also makes the downloaded app more clean.)
+
+- Antfu discusses some optimisation work he did with the startup times, [here](https://www.youtube.com/live/kevpEOR1mrw?si=NSEbreEtkua8vWJD&t=4853), with code [here](https://github.com/nuxt/learn.nuxt.com/commit/b2f2662f9b993a696d6252809253979956de7c89):
+
+  - Optimised automatically with a flag.
+  - `SSR:false`, so only one Vite server. Plan is to enable it back after content is delivered to the page.
+  - `warmupEntry: false`, no need for warmup as 'entry is hit immediately'.
+
+- [Chore](https://github.com/nuxt/learn.nuxt.com/commit/11f5b9a3dce9c0b4be040d8e9ab594f3de1d721f) shows how to enable ESLint for CSS (achieved with a single line).
+
+Then discusses what todo next with the time allotted... decide to look to read and setup Monaco Editor.
+
+# [1:25:50 Monaco Editor Setup (struggling)](https://www.youtube.com/live/kevpEOR1mrw?si=-2eEw2RgacJZGo2c&t=5150)
+
+- Antfu understands Monaco Editor is extracted from VSCode, [Github Repo](https://github.com/microsoft/monaco-editor) and [Documention Site](https://microsoft.github.io/monaco-editor/), however found no guide.
+- Instead, looks to Samples section and in picks up Vite-React project.
+- Antfu demontrates transition from React to Vue though setting up the `PanelEditorClient.client.vue`.
+  - Shows hack for 'ensuring always true' before running, `el.value!`.
+  - Links the more specific editor as a sub-component to `PanelEditor.vue`.
+  - [Links](https://www.youtube.com/live/kevpEOR1mrw?si=NWRZ3bVDNSK9fZ4c&t=5798) file selection to active view of editor. Achieves this through a `watchEffec()`.
+  - Sets up `UserWorker` for the editor to apply styles (& syntax highlighting).
+    - Antfu shows how to import Types for the file copied across, using Typescipts `<reference types="vite/client">`, which works.
+    - Now considers file extensions, to setworker actions depending on file selected, works.
+    - Next, lets consider typescript.
+      - Appears need to pass a Uri.
+      - Appears need to create a model.
+      - Appears model needs to be cached.
+    - Next, reviews new source, [Nuxt Monaco](https://github.com/e-chan1007/nuxt-monaco-editor) editor module.
+  - Antfu, considers using the Monaco Editor Module instead of writing a custom one.
+    - Antfu implements, and discovers same error.
+    - Tries one time more with custom direction, this time considering Vite has established a conflict, so:
+      - Removes the cache and
+      - Backs out some of the optimisation, with respect to Monaco.
+
+Considering time in recording this ep. and where we are at, Antfu call break here.
+General discussion:
+
+- It would be good if guides were put up on the Monaco website.
+- Could show pathway for integrating with frameworks, also noting Volar should be implemented.
+- Volar is becoming a universal (Vue, Sveltte, Astro) IDE plugin.
+
+Before closing, Antfu reviews before committing only the code that is required.
+
+[Commit: / feat: setup basic monaco editor /](https://github.com/nuxt/learn.nuxt.com/commit/c99874d9fac39382f13b33af218504959c89280f).

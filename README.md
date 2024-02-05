@@ -5,6 +5,8 @@
 - [Episode 3 - Pinia & Editor Refactors](#episode-3---pinia--editor-refactors)
 - [Episode 4 - Frame Communications](#episode-4---frame-communications)
 - [Episode 5 - Frame Communications](#episode-5---terminal0-panel-&-download-zip)
+- [Episode 6 - Mastering Pinia with Eduardo](#episode-6---mastering-pinia-with-eduardo)
+- [Episode 7 - Volar and Typescript Setup](#episode-7---volar-and-typescript-setup)
 
 ---
 
@@ -756,3 +758,60 @@ General discussion:
 Before closing, Antfu reviews before committing only the code that is required.
 
 [Commit: / feat: setup basic monaco editor /](https://github.com/nuxt/learn.nuxt.com/commit/c99874d9fac39382f13b33af218504959c89280f).
+
+# [Episode 7 - Volar and Typescript Setup](https://www.youtube.com/live/3TUlDmn6J_E?si=egLuwt8fpAQZO97x)
+
+## [0:00:00 Prepare](https://www.youtube.com/live/3TUlDmn6J_E?si=egLuwt8fpAQZO97x)
+
+- Antfu points out Github now shows separate MD files in their viewer.
+
+## [0:03:00 Changes Catch up](https://www.youtube.com/live/3TUlDmn6J_E?si=Ry9vUhd9AWP3NelL&t=182)
+
+- Antfu reviews PRs and Commits:
+
+  - Picking up from last episode, when struggling with the TS commit, right after the show, a fix was PR'ed to the project.
+    - [Commit - /fix - monaco throwing unexpected error /](https://github.com/nuxt/learn.nuxt.com/commit/5e94204c39741f3f9cd725e838e2149d340d8b83)
+      - Interesting because Antfu wouldn't have easily thought of the cause.
+      - Nuxt is probably using Vite dev server, however this is not the same as Nitros.
+      - Thus need to duplicate the headers in Vite.
+      - Nuxt's security policy bars the TS worker from loading. Antfu will review / consider with Nuxt team.
+  - Upgraded Nuxt to allow for nightly build of Nuxt to be used in anticipation of 3.9
+  - [Commit](https://github.com/nuxt/learn.nuxt.com/commit/c1adc41aa57999fff97631b220397abdb4ffbcbf) - fixing Monaco update event handler.
+    - On review of this commit, worried that the event may never be fired.
+    - Will review.
+  - [Commit](https://github.com/nuxt/learn.nuxt.com/commit/2d8b525c50a58458020b29385ab0aa9e3930cc6f) - merging of PR to make file tree.
+    - Antfu outlines the way in which the component works.
+    - Antfu wonders if the file tree would be better as an Array, to allow sorting.
+  - [Commit](https://github.com/nuxt/learn.nuxt.com/commit/de6f2ba5caeae81069db7a9107e2f91563a58c6f) - fixing of flashing during IFrame navigation.
+    - Discusses how Vue Router uses SPA client side navigation, with soft reload.
+    - User interaction was having terminal frame updating when the URL section updated.
+    - Fix: changing auto-update, to manual update thus having smaller scope of what is updated.
+    - Separates user input and navigation coming from the client. (If client navigation, don't need to do the refresh again.)
+  - [Commit](https://github.com/nuxt/learn.nuxt.com/commit/307b9349a9a6471cfff25f606317bd24b89fa7f2) - dragging file tree panel, allowing for resizing of the file tree panel like other sub-panels. (Antfu didn't discuss much as covered in earlier sessions.)
+  - [Commit](https://github.com/nuxt/learn.nuxt.com/commit/e2a7ded77f8d773dc458e586bda78139ddcf94ac) - styling for the editor Monaco
+    - Provides for monaco styles for dark and light.
+    - Changes background theme from gray to transparent (to allow the blue to come through), likewise allowing the white to come through.
+  - [Commit](https://github.com/nuxt/learn.nuxt.com/commit/e2a7ded77f8d773dc458e586bda78139ddcf94ac) - updating file tree icons.
+  - [Commit](https://github.com/nuxt/learn.nuxt.com/commit/16d4a18ceef4a41a5042674ebbd108404df32a5c) - omitting node files from zip function as treepath also used for download.
+  - [Commit](https://github.com/nuxt/learn.nuxt.com/commit/b93de4b2115616dace90c6c160d3307dde26443d) - adds caret (>) to file path to indicate openable file path.
+
+- Antfu talks about the TS error of NuxtConfig. The editor is unaware of the existing typescript config file existing as is viewing a sub-set of the files. (It is currently only checking single file.)
+- Discusses what Antfu uses, leading to realisation that monaco fonts need updating.
+  - Improves naming of file from `PanelEditorClient.client.vue` to `PanelEditorMonaco.client.vue`.
+  - DM font already loaded, so implementation of new fonts is easy. See [here](https://github.com/nuxt/learn.nuxt.com/commit/ee52564f97c878bc521799b7fb43c3df163effc5).
+
+## [0:21:35 Setup Volar](https://www.youtube.com/live/3TUlDmn6J_E?si=J-gU_KpO4Cc3tcx0&t=1296)
+
+- Antfu explains the independent repo of Volarjs is the backbone service for other framework ide tooling.
+- The 'language-tools' is the [location](https://github.com/vuejs/language-tools) for the rules that apply to Vue.
+- Looks at Vue RPL, however thinking we'll look at this codebase as a reference particularly in the way it uses monaco, which appears to center around a Vue Worker.
+
+- Antfu starts by setting up working environment, with a failing set of code, which parses with a Typescript error but compiles without error.
+  - 
+
+
+Footnote: background reading [here](https://blog.vuejs.org/posts/volar-a-new-beginning), Volar is spun out of Vue eco system to support other frameworks. (NH)
+
+## [1:33:35 PR Reviews](https://www.youtube.com/live/3TUlDmn6J_E?si=RWSOswkFATxzz9FA&t=5617)
+
+## [1:40:45 Interactive Terminal](https://www.youtube.com/live/3TUlDmn6J_E?si=1_eEDlyngoogkqlN&t=6047)
